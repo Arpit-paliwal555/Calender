@@ -53,13 +53,13 @@ const Calender = () => {
         cells.push(       
                 days.map((day, index) => (
                     <Link key={index} to={`/day/${day.id}`}>
-                        <div key={index} className="border border-gray-300 rounded-lg p-4 h-32 flex flex-col justify-start items-start hover:bg-blue-100 transition">
+                        <div key={index} className="border border-gray-300 rounded-lg p-4 h-32 flex flex-col justify-start items-start hover:bg-zinc-200 transition">
                         <div className="font-medium text-lg">{index+1}</div>
                         
                         {temp[day.id]?.length>0?(
                             <>
                             {temp[day.id].slice(0,2).map(event => (
-                                <div key={event.title} className="border border-blue-300 bg-blue-100 px-2 py-1 rounded  text-xs w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                                <div key={event.title} className="border border-emerald-300 bg-emerald-200 px-2 py-1 rounded  text-xs w-full overflow-hidden text-ellipsis whitespace-nowrap">
                                     {event.title} at {event.time}
                                 </div>
                             ))}
@@ -83,7 +83,7 @@ const Calender = () => {
             <div className="items-center mb-4">
                 <h2 className="text-2xl flex justify-center gap-5 font-semibold text-grey-700">
                     <button onClick={handleMonthDecrement}><img className="w-5 h-10" src={prevArrow} alt="" /></button>
-                    <span>{new Date(year, month).toLocaleString("default", {month:"long"})}</span>
+                    <span className="w-32 inline-block text-center">{new Date(year, month).toLocaleString("default", {month:"long"})}</span>
                     <button onClick={handleMonthIncrement}><img className="w-5 h-10" src={nextArrow} alt="" /></button>
                     <button onClick={handleYearDecrement}><img className="w-5 h-10" src={prevArrow} alt="" /></button>
                     <span> {year} </span>

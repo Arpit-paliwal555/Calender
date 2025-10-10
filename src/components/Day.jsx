@@ -76,8 +76,8 @@ const Day = ()=>{
                                 <div className="w-full h-16 cursor-pointer overflow-y-auto hover:bg-slate-100" onClick={handleAddEventClick}>                                                                        
                                     {eventsByHour[hour]?.length > 0 ? (
                                                             eventsByHour[hour].map(event => (
-                                                                <div key={event.title} className="bg-blue-100 p-2 text-sm rounded mb-1">
-                                                                    {event.title} at {event.time}
+                                                                <div key={event.title} className="bg-emerald-300 p-2 text-xs rounded mb-1">
+                                                                    <b>{event.title}</b> at <b>{event.time}</b>
                                                                 </div>
                                                             ))
                                                         ) : (

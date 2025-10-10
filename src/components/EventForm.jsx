@@ -49,7 +49,7 @@ const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
                         <button type="button" onClick={() => onClose && onClose()} className="px-4 py-2 rounded border">
                             Cancel
                         </button>
-                        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+                        <button type="submit" className="bg-zinc-800 text-white px-4 py-2 rounded">
                             Save Event
                         </button>
                     </div>
