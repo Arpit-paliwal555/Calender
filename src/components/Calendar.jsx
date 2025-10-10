@@ -55,12 +55,18 @@ const Calender = () => {
                     <Link key={index} to={`/day/${day.id}`}>
                         <div key={index} className="border border-gray-300 rounded-lg p-4 h-32 flex flex-col justify-start items-start hover:bg-blue-100 transition">
                         <div className="font-medium text-lg">{index+1}</div>
+                        
                         {temp[day.id]?.length>0?(
-                            temp[day.id].map(event => (
-                                <div key={event.title} className="">
+                            <>
+                            {temp[day.id].slice(0,2).map(event => (
+                                <div key={event.title} className="border border-blue-300 bg-blue-100 px-2 py-1 rounded  text-xs w-full overflow-hidden text-ellipsis whitespace-nowrap">
                                     {event.title} at {event.time}
                                 </div>
-                            ))
+                            ))}
+                            {(temp[day.id].length > 2 && (
+                                <div className="text-xs text-grey-500 mt-1">+{temp[day.id].length-2} more</div>
+                            ))}
+                            </>
                         ):(<div className="text-sm text-gray-500 mt-1">No Events.</div>)}
                         
                     </div>
@@ -92,7 +98,7 @@ const Calender = () => {
                 ))}
             </div>
             {/*calendar grid*/}
-            <div className="grid grid-cols-7 gap-2 text-grey-700">
+            <div className="grid grid-cols-7 md:grid-cols-7 sm:grid-cols-2 gap-2 text-grey-700">
                 {calendarCells}
             </div>
         </div> 

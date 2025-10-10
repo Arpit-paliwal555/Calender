@@ -73,10 +73,10 @@ const Day = ()=>{
                         <div key={hour} className="border border-grey-300 flex flex-row">
                             <div className="font-thin text-sm w-12 text-center">{hour}</div>
                             <div className="flex flex-col w-full">
-                                <div className="w-full h-12 cursor-pointer hover:bg-slate-100" onClick={handleAddEventClick}>                                                                        
+                                <div className="w-full h-16 cursor-pointer overflow-y-auto hover:bg-slate-100" onClick={handleAddEventClick}>                                                                        
                                     {eventsByHour[hour]?.length > 0 ? (
                                                             eventsByHour[hour].map(event => (
-                                                                <div key={event.title} className="bg-blue-100 p-2 rounded mb-1">
+                                                                <div key={event.title} className="bg-blue-100 p-2 text-sm rounded mb-1">
                                                                     {event.title} at {event.time}
                                                                 </div>
                                                             ))
@@ -86,7 +86,7 @@ const Day = ()=>{
 
                                 </div>
                                 {/* <div className="w-full h-6 cursor-pointer hover:bg-slate-100" onClick={handleAddEventClick}>
-                                    
+                            
                                 </div> */}
                             </div>
                         </div>
