@@ -1,4 +1,5 @@
 import CalendarIcon from '../assets/calendar-svgrepo-com.svg';
+import { Link } from 'react-router-dom';
 
 const Navbar = ()=>{
     return(
@@ -10,8 +11,10 @@ const Navbar = ()=>{
                         <div className='text-white font-semibold text-lg font-sans' >My Calendar</div>
                     </div>
                     <div className='hidden md:flex items-center space-x-4'>
-                        <a href="" className='text-blue-100 hover:text-white'>Home</a>
-                        <a href="" className='text-blue-100 hover:text-white'>Events</a>
+                        <a href="" className='text-blue-100 hover:text-white'>Home</a>                       
+                        <Link to="/events" className="text-blue-100 hover:text-white">
+                            Events
+                        </Link>
                         <a href="" className='text-blue-100 hover:text-white'>About</a>
                     </div>
                     <div className="md:hidden">

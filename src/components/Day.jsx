@@ -1,10 +1,17 @@
 import {useState, useRef, useEffect} from "react";
 import EventForm from "./EventForm.jsx";
+import { useParams } from "react-router-dom";
+import { useEventsContext } from "../contexts/EventsContext.jsx";
 
 const Day = ()=>{
     const [showForm,setShowForm] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(null);
+    const date = useParams().dayId;
+    const [selectedDate, setSelectedDate] = useState(date);
     const modalRef = useRef(null);
+    const {events, addEvent} = useEventsContext();
+    const [eventsByDay, setEventsByDay] = useState([]);
+    const [eventsByHour, setEventsByHour] = useState({});
+    
     const hours = Array.from({length:24},(_,i)=>i+1); //24 hours
     const handleAddEventClick = ()=>{
         setShowForm(true);
@@ -15,7 +22,18 @@ const Day = ()=>{
         setShowForm(true);
     };
 
-    
+    useEffect(() => {
+        setEventsByDay(events.filter(event => event.date === selectedDate));
+        const temp = {};    
+        events.forEach(event => {
+            const hour = new Date(`${event.date}T${event.time}`).getHours();
+            if (!temp[hour]) temp[hour] = [];
+            temp[hour].push(event);
+        });
+        setEventsByHour(temp);
+
+    }, [events])
+
     // Close modal when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -23,30 +41,53 @@ const Day = ()=>{
                 setShowForm(false);
             }
         };
-
         if (showForm) {
             document.addEventListener('mousedown', handleClickOutside);
         }
-
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [showForm]);
 
+    const handleCloseForm = () => setShowForm(false);
+
+    const handleSaveEvent = (event) => {
+        console.log('Saved event:', event);
+        // TODO: persist event to state or backend
+        addEvent(event);
+        setShowForm(false);
+    }
+
     return (
         <>
         <div className="relative">
-        {showForm && <EventForm modalRef={modalRef} selectedDate={selectedDate} />}            
+        {showForm && (
+            <EventForm
+                modalRef={modalRef}
+                selectedDate={selectedDate}
+                onClose={handleCloseForm}
+                onSave={handleSaveEvent}
+            />
+        )}            
         {hours.map((hour) => (
                         <div key={hour} className="border border-grey-300 flex flex-row">
                             <div className="font-thin text-sm w-12 text-center">{hour}</div>
                             <div className="flex flex-col w-full">
-                                <button className="w-full h-6 cursor-pointer hover:bg-slate-100" onClick={handleAddEventClick}>
-                                    {/* Optional: Label like "00 - 30" */}
-                                </button>
-                                <button className="w-full h-6 cursor-pointer hover:bg-slate-100">
-                                    {/* Optional: Label like "30 - 00" */}
-                                </button>
+                                <div className="w-full h-12 cursor-pointer hover:bg-slate-100" onClick={handleAddEventClick}>                                                                        
+                                    {eventsByHour[hour]?.length > 0 ? (
+                                                            eventsByHour[hour].map(event => (
+                                                                <div key={event.title} className="bg-blue-100 p-2 rounded mb-1">
+                                                                    {event.title} at {event.time}
+                                                                </div>
+                                                            ))
+                                                        ) : (
+                                                            <div className="text-gray-400 text-sm">No events</div>
+                                                        )}
+
+                                </div>
+                                {/* <div className="w-full h-6 cursor-pointer hover:bg-slate-100" onClick={handleAddEventClick}>
+                                    
+                                </div> */}
                             </div>
                         </div>
                     ))}
