@@ -1,10 +1,15 @@
 import CalendarIcon from '../assets/calendar-svgrepo-com.svg';
 import { Link } from 'react-router-dom';
+import React from 'react';
 
 const Navbar = ()=>{
+    const [isOpen, setIsOpen] = React.useState(false);
+
+    const onClose = () => setIsOpen(false);
+    const onOpen = () => setIsOpen(true);
     return(
         <>
-            <header className='w-screen bg-zinc-800 sm:px-6 md:px-8 lg:px-12'>
+            <header className='w-full bg-zinc-800 sm:px-6 md:px-8 lg:px-12'>
                 <nav className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between'>
                     <div className="h-28 sm:h-24 md:h-22 lg:h-16 flex items-center">
                         <img src={CalendarIcon} className='h-8 w-8 mr-2' alt="" />
@@ -17,13 +22,40 @@ const Navbar = ()=>{
                         <Link to="/events" className="text-zinc-100 hover:text-zinc-300">
                             Events
                         </Link>
-                        <a href="" className='text-zinc-100 hover:text-zinc-300'>About</a>
+                        <button className='text-zinc-100 hover:text-zinc-300' onClick={onOpen}>About</button>
                     </div>
                     <div className="md:hidden">
                       <button className="text-blue-100">Menu</button>
                     </div>
                 </nav>
-            </header>    
+            </header> 
+            <>
+            {/* Backdrop */}
+            {isOpen && (
+                <div
+                className="fixed inset-0 bg-black bg-opacity-50 z-40"
+                onClick={onClose}
+                />
+            )}
+
+            {/* Sidebar */}
+            <div
+                className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-50 ${
+                isOpen ? 'translate-x-0' : 'translate-x-full'
+                }`}
+            >
+                <div className="p-4 border-b font-bold text-lg flex justify-between items-center">
+                About
+                <button onClick={onClose} className="text-gray-500 hover:text-black">
+                    ✕
+                </button>
+                </div>
+                <ul className="p-4 space-y-4">
+                <li><a href="#" className="text-blue"> Contact Us</a></li>
+                <li><a href="#" className="text-blue">Terms & Conditions</a></li>
+                </ul>
+            </div>
+            </>   
         </>
     )
 }
