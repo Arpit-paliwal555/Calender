@@ -11,7 +11,9 @@ const Navbar = ()=>{
                         <div className='text-white font-semibold text-lg font-sans' >My Calendar</div>
                     </div>
                     <div className='hidden md:flex items-center space-x-4'>
-                        <a href="" className='text-blue-100 hover:text-white'>Home</a>                       
+                        <Link to="/" className='text-blue-100 hover:text-white'>
+                            Home
+                        </Link>                       
                         <Link to="/events" className="text-blue-100 hover:text-white">
                             Events
                         </Link>

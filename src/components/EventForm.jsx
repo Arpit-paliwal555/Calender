@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
     const [title, setTitle] = useState('');

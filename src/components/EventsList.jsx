@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useEventsContext} from "../contexts/EventsContext";
-import clock from '../assets/time.svg';
 
 const EventsList = () => {
     const {events, removeEvent} = useEventsContext();
@@ -41,7 +40,10 @@ const EventsList = () => {
     }, [events]);
     
     
-    if(!events || events.length==0) return <div>No events to display.</div>
+    if(!events || events.length==0) 
+        return <div className="flex items-center justify-center h-64 text-gray-500">
+                    No events to display.
+               </div>
 
     return (
         <div>

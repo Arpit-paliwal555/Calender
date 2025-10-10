@@ -67,7 +67,7 @@ const Calender = () => {
                                 <div className="text-xs text-grey-500 mt-1">+{temp[day.id].length-2} more</div>
                             ))}
                             </>
-                        ):(<div className="text-sm text-gray-500 mt-1">No Events.</div>)}
+                        ):(<div className="text-sm text-gray-500 mt-1">No Event.</div>)}
                         
                     </div>
                     </Link>

@@ -1,4 +1,4 @@
-import { format, startOfMonth, endOfMonth, eachDayOfInterval } from 'date-fns';
+import { format, endOfMonth, eachDayOfInterval } from 'date-fns';
 
 const date  = new Date();
 const currMonth = date.getMonth();
