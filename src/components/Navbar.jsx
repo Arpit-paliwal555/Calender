@@ -4,6 +4,9 @@ import React from 'react';
 
 const Navbar = ()=>{
     const [isOpen, setIsOpen] = React.useState(false);
+    const [menuOpen, setMenuOpen] = React.useState(false);
+
+    const onMenuClick = () => setMenuOpen(!menuOpen);
 
     const onClose = () => setIsOpen(false);
     const onOpen = () => setIsOpen(true);
@@ -27,7 +30,23 @@ const Navbar = ()=>{
                         <button className='text-zinc-100 hover:text-zinc-300' onClick={onOpen}>About</button>
                     </div>
                     <div className="md:hidden">
-                      <button className="text-blue-100">Menu</button>
+                      <button className="text-blue-100" onClick={onMenuClick}>Menu</button>
+                      {menuOpen && (
+                            <div className="mt-2 flex flex-col space-y-2">
+                            <Link to="/" className="text-zinc-100 hover:text-zinc-300">
+                                Home
+                            </Link>
+                            <Link to="/events" className="text-zinc-100 hover:text-zinc-300">
+                                Events
+                            </Link>
+                            <button
+                                className="text-zinc-100 hover:text-zinc-300"
+                                onClick={onOpen}
+                            >
+                                About
+                            </button>
+                            </div>
+                        )}
                     </div>
                 </nav>
             </header> 

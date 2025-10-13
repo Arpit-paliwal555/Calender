@@ -44,7 +44,7 @@ const Calender = () => {
             temp[event.date].push(event);
             console.log("eventdate:", event.date);
         });
-        //empty cells before the first day
+        //empty cells before start day
         for(let i=0;i<startDay;i++){
             cells.push(<div key={`empty-${i}`} className="bg-transparent"></div>);
         }
@@ -54,7 +54,7 @@ const Calender = () => {
                 days.map((day, index) => (
                     <Link key={index} to={`/day/${day.id}`}>
                         <div key={index} className="border border-gray-300 rounded-lg p-4 h-32 flex flex-col justify-start items-start hover:bg-zinc-200 transition">
-                        <div className="font-medium text-lg">{index+1}</div>
+                        <div className={`font-medium text-lg ${day.dayName=='Sun'?'text-emerald-600' : ''}`}>{index+1}</div>
                         
                         {temp[day.id]?.length>0?(
                             <>
@@ -92,9 +92,9 @@ const Calender = () => {
                 {/*need to add month/year selectors */}
             </div>
             {/*day names*/}
-            <div className="grid grid-cols-7 gap-2 text-center font-medium text-grey-700 mb-2">
+            <div className="grid grid-cols-7 gap-2 text-center font-medium mb-2">
                 {daysOfWeek.map((day)=>(
-                    <div key={day}>{day}</div>
+                    <div key={day} className={`text-grey-700 ${day === 'Sun' ? 'text-emerald-600' : ''}`}>{day}</div>
                 ))}
             </div>
             {/*calendar grid*/}

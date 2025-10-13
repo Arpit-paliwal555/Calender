@@ -2,6 +2,7 @@ import {useState, useRef, useEffect} from "react";
 import EventForm from "./EventForm.jsx";
 import { useParams } from "react-router-dom";
 import { useEventsContext } from "../contexts/EventsContext.jsx";
+import { fi } from "date-fns/locale";
 
 const Day = ()=>{
     const [showForm,setShowForm] = useState(false);
@@ -21,18 +22,24 @@ const Day = ()=>{
         setSelectedDate(dayId);
         setShowForm(true);
     };
+    useEffect(() => {
+        const filteredEvents = events.filter(event => event.date === selectedDate);
+        setEventsByDay(filteredEvents);
+    }, [events, selectedDate]);
 
     useEffect(() => {
-        setEventsByDay(events.filter(event => event.date === selectedDate));
         const temp = {};    
-        events.forEach(event => {
+        if(eventsByDay.length===0){
+            console.log("No events for this day");
+        }
+        eventsByDay.forEach(event => {
             const hour = new Date(`${event.date}T${event.time}`).getHours();
             if (!temp[hour]) temp[hour] = [];
             temp[hour].push(event);
         });
         setEventsByHour(temp);
 
-    }, [events])
+    }, [eventsByDay])
 
     // Close modal when clicking outside
     useEffect(() => {

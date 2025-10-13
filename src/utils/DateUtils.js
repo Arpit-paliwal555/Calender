@@ -15,6 +15,7 @@ const generateDays = (year, month) => {
     const days = eachDayOfInterval({ start, end }).map((date) => ({
         id: format(date, 'yyyy-MM-dd'), // e.g., "2025-10-08"
         label: format(date, 'EEE dd'),  // e.g., "Wed 08"
+        dayName: format(date, 'EEE'), // e.g., "Wed"
     }));
 
     return days;
