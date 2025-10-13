@@ -88,7 +88,7 @@ const Day = ()=>{
                                                                 </div>
                                                             ))
                                                         ) : (
-                                                            <div className="text-gray-400 text-sm">No events</div>
+                                                            <div className="text-gray-400 text-sm">No event.</div>
                                                         )}
 
                                 </div>

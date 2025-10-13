@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { Link } from "react-router-dom";
-import { daysOfWeek, getDaysInMonth, getStartDay, generateDays } from "../utils/DateUtils";
+import { daysOfWeek, getDaysInMonth, getStartDay, generateDays, fetchHolidays } from "../utils/DateUtils";
 import nextArrow from "../assets/arrow-next.svg";
 import prevArrow from "../assets/arrow-prev.svg";
 import { useEventsContext } from "../contexts/EventsContext";
@@ -9,6 +9,7 @@ const Calender = () => {
     const [month, setMonth] = useState(9); // October (0-indexed)
     const [year, setYear] = useState(2025);
     const [calendarCells, setCalendarCells] = useState([]);
+    const [holidays, setHolidays] = useState({});
     const {events} = useEventsContext();
 
     const handleMonthDecrement = () => {
@@ -32,6 +33,20 @@ const Calender = () => {
     const handleYearIncrement = () => {
         setYear(year + 1);
     }
+
+    useEffect(() => {
+        const fetchAndSetHolidays = async () => {
+            const festivalMap = {};
+            const data = await fetchHolidays(year);
+            data.forEach(holiday => {
+                const date = holiday.date.iso; // e.g., "2025-10-02"
+                festivalMap[date] = holiday.name;
+            });
+            setHolidays(festivalMap);
+            console.log("holidays:", festivalMap);
+        };
+        fetchAndSetHolidays();
+    }, [year]);
     
     useEffect(() => {
         const daysInMonth = getDaysInMonth(month, year);
@@ -48,18 +63,20 @@ const Calender = () => {
         for(let i=0;i<startDay;i++){
             cells.push(<div key={`empty-${i}`} className="bg-transparent"></div>);
         }
-
         //date cells
         cells.push(       
                 days.map((day, index) => (
                     <Link key={index} to={`/day/${day.id}`}>
                         <div key={index} className="border border-gray-300 rounded-lg p-4 h-32 flex flex-col justify-start items-start hover:bg-zinc-200 transition">
                         <div className={`font-medium text-lg ${day.dayName=='Sun'?'text-emerald-600' : ''}`}>{index+1}</div>
-                        
+                        {holidays[day.id] && (
+                            <div className="text-xs line-clamp-2 text-red-500 italic">🎉{holidays[day.id]}</div>
+                        )}
+                        <div className="mt-2 w-full flex flex-col gap-1">
                         {temp[day.id]?.length>0?(
                             <>
                             {temp[day.id].slice(0,2).map(event => (
-                                <div key={event.title} className="border border-emerald-300 bg-emerald-200 px-2 py-1 rounded  text-xs w-full overflow-hidden text-ellipsis whitespace-nowrap">
+                                <div key={event.title} className="border border-emerald-300 bg-emerald-200 px-2 py-1 rounded italic text-xs w-full overflow-hidden text-ellipsis whitespace-nowrap">
                                     {event.title} at {event.time}
                                 </div>
                             ))}
@@ -68,13 +85,13 @@ const Calender = () => {
                             ))}
                             </>
                         ):(<div className="text-sm text-gray-500 mt-1">No Event.</div>)}
-                        
+                        </div>
                     </div>
                     </Link>
                 ))
         );
         setCalendarCells(cells);
-    }, [month, year, events]);
+    }, [month, year, events, holidays]);
 
 
    return(

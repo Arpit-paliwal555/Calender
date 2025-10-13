@@ -1,5 +1,7 @@
 import { format, endOfMonth, eachDayOfInterval } from 'date-fns';
 
+const apiURL = import.meta.env.VITE_CALENDERIFIC_API_URL;
+const apiKey = import.meta.env.VITE_CALENDERIFIC_API_KEY;
 const date  = new Date();
 const currMonth = date.getMonth();
 const currYear  = date.getFullYear();
@@ -29,4 +31,15 @@ const getStartDay = (month, year) => {
 return new Date(year, month, 1).getDay();
 };
 
-export {currMonth, currYear, daysOfWeek, getDaysInMonth, getStartDay, generateDays};
+const fetchHolidays = async (year) => {
+    try {
+        const response = await fetch(`${apiURL}?api_key=${apiKey}&country=IN&year=${year}`);
+        const data = await response.json();
+        return data.response.holidays;
+    } catch (error) {
+        console.error("Error fetching holidays:", error);
+        return [];
+    }
+};
+
+export {currMonth, currYear, daysOfWeek, getDaysInMonth, getStartDay, generateDays, fetchHolidays};
