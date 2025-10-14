@@ -31,15 +31,37 @@ const getStartDay = (month, year) => {
 return new Date(year, month, 1).getDay();
 };
 
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
 const fetchHolidays = async (year) => {
-    try {
-        const response = await fetch(`${apiURL}?api_key=${apiKey}&country=IN&year=${year}`);
-        const data = await response.json();
-        return data.response.holidays;
-    } catch (error) {
-        console.error("Error fetching holidays:", error);
-        return [];
+    const cacheKey = `holidays_${year}`;
+    const cached = localStorage.getItem(cacheKey);
+    if(cached){
+        try{
+            const {data, timestamp} = JSON.parse(cached);
+            const now = new Date().getTime();
+            if(now - timestamp < CACHE_DURATION){
+                return data;
+            }else{
+                localStorage.removeItem(cacheKey);//expired cache
+            }
+        }catch(e){
+            console.warn("Invalid cache format:",e);
+            localStorage.removeItem(cacheKey);
+        };
     }
+        try{
+            const response = await fetch(`${apiURL}?api_key=${apiKey}&country=IN&year=${year}`);
+            const result = await response.json();
+            const holidays = result.response.holidays;
+
+            //store in cache with timestamp
+            localStorage.setItem(cacheKey, JSON.stringify({data: holidays, timestamp: new Date().getTime()}));
+            return holidays;
+        }catch(e){
+            console.error("Error fetching holidays:", e);
+            return [];
+        }
 };
 
 export {currMonth, currYear, daysOfWeek, getDaysInMonth, getStartDay, generateDays, fetchHolidays};

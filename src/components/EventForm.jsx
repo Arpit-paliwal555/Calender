@@ -3,12 +3,19 @@ import { useState } from 'react';
 const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
     const [title, setTitle] = useState('');
     const [time, setTime] = useState('');
+    const [description, setDescription] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const event = {
+            id,
+            userId:'1', // Placeholder, replace with actual user info if available
             title: title.trim(),
             time,
+            description: '',
+            category:'',
+            createdAt: new Date().getHours(),
             date: selectedDate,
         };
         if (onSave) onSave(event);
@@ -39,12 +46,26 @@ const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
                         required
                     />
                     <input
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        type="text"
+                        placeholder="Event Description"
+                        className="border p-2 rounded"
+                        required
+                    />
+                    <input
                         value={time}
                         onChange={(e) => setTime(e.target.value)}
                         type="time"
                         className="border p-2 rounded"
                         required
                     />
+                    <select onChange={(e) => setSelectedCategory(e.target.value)}>
+                        <option value="All">All</option>
+                        <option value="Work">Work</option>
+                        <option value="Personal">Personal</option>
+                        <option value="Festival">Festival</option>
+                    </select>
                     <div className="flex gap-2 justify-end">
                         <button type="button" onClick={() => onClose && onClose()} className="px-4 py-2 rounded border">
                             Cancel

@@ -6,32 +6,30 @@ import prevArrow from "../assets/arrow-prev.svg";
 import { useEventsContext } from "../contexts/EventsContext";
 
 const Calender = () => {
-    const [month, setMonth] = useState(9); // October (0-indexed)
-    const [year, setYear] = useState(2025);
     const [calendarCells, setCalendarCells] = useState([]);
     const [holidays, setHolidays] = useState({});
-    const {events} = useEventsContext();
+    const {events, month, year, changeMonth, changeYear} = useEventsContext();
 
     const handleMonthDecrement = () => {
         if (month === 0) {
-            setMonth(11);
+            changeMonth(11);
         }else{
-            setMonth(month - 1);
+            changeMonth(month - 1);
         }
     };
     const handleMonthIncrement = () => {
         if (month === 11) {
-            setMonth(0);
+            changeMonth(0);
         }else{
-            setMonth(month + 1);
+            changeMonth(month + 1);
         }
     };
 
     const handleYearDecrement = () => {
-        setYear(year - 1);
+        changeYear(year - 1);
     }
     const handleYearIncrement = () => {
-        setYear(year + 1);
+        changeYear(year + 1);
     }
 
     useEffect(() => {
@@ -43,7 +41,6 @@ const Calender = () => {
                 festivalMap[date] = holiday.name;
             });
             setHolidays(festivalMap);
-            console.log("holidays:", festivalMap);
         };
         fetchAndSetHolidays();
     }, [year]);
@@ -75,13 +72,13 @@ const Calender = () => {
                         <div className="mt-2 w-full flex flex-col gap-1">
                         {temp[day.id]?.length>0?(
                             <>
-                            {temp[day.id].slice(0,2).map(event => (
+                            {temp[day.id].slice(0,1).map(event => (
                                 <div key={event.title} className="border border-emerald-300 bg-emerald-200 px-2 py-1 rounded italic text-xs w-full overflow-hidden text-ellipsis whitespace-nowrap">
                                     {event.title} at {event.time}
                                 </div>
                             ))}
-                            {(temp[day.id].length > 2 && (
-                                <div className="text-xs text-grey-500 mt-1">+{temp[day.id].length-2} more</div>
+                            {(temp[day.id].length > 1 && (
+                                <div className="text-xs text-grey-500 mt-1">+{temp[day.id].length-1} more</div>
                             ))}
                             </>
                         ):(<div className="text-sm text-gray-500 mt-1">No Event.</div>)}
