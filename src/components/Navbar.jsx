@@ -2,7 +2,7 @@ import CalendarIcon from '../assets/calendar-svgrepo-com.svg';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
-const Navbar = ()=>{
+const Navbar = ({user, onSignOut})=>{
     const [isOpen, setIsOpen] = React.useState(false);
     const [menuOpen, setMenuOpen] = React.useState(false);
 
@@ -27,7 +27,15 @@ const Navbar = ()=>{
                         <Link to="/events" className="text-zinc-100 hover:text-zinc-300">
                             Events
                         </Link>
-                        <button className='text-zinc-100 hover:text-zinc-300' onClick={onOpen}>About</button>
+                        <button className='text-zinc-100 hover:text-zinc-300' onClick={onOpen}>About</button>                        
+                        {user ? (
+                                <div>
+                                <span>Welcome, {user.email}</span>
+                                <button onClick={onSignOut}>Sign Out</button>
+                                </div>
+                            ) : (
+                                <span>Not logged in</span>
+                            )}
                     </div>
                     <div className="md:hidden">
                       <button className="text-blue-100" onClick={onMenuClick}>Menu</button>
