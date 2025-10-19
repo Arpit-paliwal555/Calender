@@ -1,10 +1,37 @@
 import CalendarIcon from '../assets/calendar-svgrepo-com.svg';
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../SupabaseClient.js';
 
 const Navbar = ({user, onSignOut})=>{
-    const [isOpen, setIsOpen] = React.useState(false);
-    const [menuOpen, setMenuOpen] = React.useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [fullName, setFullName] = useState('Guest');
+
+    const tempName = async()=>{
+        // Fetch full name from Supabase
+        if(user){
+        const { data, error } = await supabase
+            .from('UserNames')
+            .select('full_name')
+            .eq('id', user.id);
+
+        if (error) {
+            console.error('Error fetching user data:', error);
+        } else if (data && data.length > 0) {
+            return data?.[0]?.full_name ?? 'Guest';
+        } else {
+            console.warn('No user metadata found for this ID.');
+        }
+        }
+    }
+    useEffect(() => {  
+        const fetchName = async () => {
+            const name = await tempName();
+            setFullName(name);
+        };
+        fetchName();
+    }, [user]);
 
     const onMenuClick = () => setMenuOpen(!menuOpen);
 
@@ -30,7 +57,7 @@ const Navbar = ({user, onSignOut})=>{
                         <button className='text-zinc-100 hover:text-zinc-300' onClick={onOpen}>About</button>                        
                         {user ? (
                                 <div>
-                                <span>Welcome, {user.email}</span>
+                                <span>Welcome, {fullName}</span>
                                 <button onClick={onSignOut}>Sign Out</button>
                                 </div>
                             ) : (

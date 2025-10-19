@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { signUp, signIn } from '../auth.js';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../SupabaseClient.js';
 
 export default function AuthPage() {
   const [email, setEmail] = useState('');
@@ -27,9 +28,9 @@ export default function AuthPage() {
       userData = data?.user;
         console.log('User signed up:', userData);
         console.log('user Id:', userData.id);
-      await supabase.from('Users').insert({
-        id: userData.user_id,
-        full_name: fullName,
+      await supabase.from('UserNames').insert({
+        id: userData.id,
+        full_name: fullName
       });
     }
 
