@@ -9,6 +9,7 @@ import { EventsProvider } from './contexts/EventsContext';
 import EventsList from './components/EventsList.jsx';
 import { onAuthStateChange, signOut } from './auth.js';
 import AuthPage from './components/Authpage.jsx';
+import {ProtectedRoute} from './components/ProtectedRoute.jsx';
 
 function App() {  
   const [user, setUser] = useState(null);
@@ -25,16 +26,41 @@ function App() {
   return (
     <>
     <EventsProvider>
-    <Router>
-      <Navbar user={user} onSignOut={signOut}></Navbar>
-      <Routes>
-        <Route path="/" element={<AuthPage />} />
-        <Route path='/home' element={<Calender></Calender>}/>
-        <Route path='/day/:dayId' element={<Day></Day>}/>
-        <Route path='/events' element={<EventsList></EventsList>}/>
-        <Route path='*' element={<div>404 Not Found</div>}/>
-      </Routes>
-    </Router>
+      <Router>
+        <Navbar user={user} onSignOut={signOut} />
+        <Routes>
+          <Route path="/" element={<AuthPage />} />
+          
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute user={user}>
+                <Calender />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/day/:dayId"
+            element={
+              <ProtectedRoute user={user}>
+                <Day />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/events"
+            element={
+              <ProtectedRoute user={user}>
+                <EventsList />
+              </ProtectedRoute>
+            }
+          />
+          
+          <Route path="*" element={<div>404 Not Found</div>} />
+        </Routes>
+      </Router>
     </EventsProvider>
     </>
   )
