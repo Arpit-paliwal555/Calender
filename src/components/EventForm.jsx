@@ -1,16 +1,19 @@
 import { useState } from 'react';
+import { useUserContext } from '../contexts/UserContext.jsx';
 
 const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
     const [title, setTitle] = useState('');
     const [time, setTime] = useState('');
     const [description, setDescription] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const {userName} = useUserContext();
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const event = {
             id: Date.now(),
-            userId:'1', // Placeholder, replace with actual user info if available
+            userId: user.id,
+            username: user.email,
             title: title.trim(),
             time,
             description: description.trim(),

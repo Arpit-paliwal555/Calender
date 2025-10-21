@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Calender from './components/Calendar';
 import Day from './components/Day';
 import { EventsProvider } from './contexts/EventsContext';
+import { UserContextProvider } from './contexts/UserContext.jsx';
 import EventsList from './components/EventsList.jsx';
 import { onAuthStateChange, signOut } from './auth.js';
 import AuthPage from './components/Authpage.jsx';
@@ -25,6 +26,7 @@ function App() {
 
   return (
     <>
+    <UserContextProvider>
     <EventsProvider>
       <Router>
         <Navbar user={user} onSignOut={signOut} />
@@ -62,6 +64,7 @@ function App() {
         </Routes>
       </Router>
     </EventsProvider>
+    </UserContextProvider>
     </>
   )
 }

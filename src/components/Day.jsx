@@ -61,6 +61,7 @@ const Day = ()=>{
     const handleSaveEvent = (event) => {
         console.log('Saved event:', event);
         // TODO: persist event to state or backend
+        
         addEvent(event);
         setShowForm(false);
     }

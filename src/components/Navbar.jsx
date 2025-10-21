@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../SupabaseClient.js';
 import { useNavigate } from 'react-router-dom';
+import { useUserContext } from '../contexts/UserContext.jsx';
 
 const Navbar = ({user, onSignOut})=>{
     const [isOpen, setIsOpen] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
-    const [fullName, setFullName] = useState('Guest');
+    const {userName, setUserName} = useUserContext();
     const navigate = useNavigate();
 
     const signOutHandler = async () => {
@@ -39,7 +40,7 @@ const Navbar = ({user, onSignOut})=>{
     useEffect(() => {  
         const fetchName = async () => {
             const name = await tempName();
-            setFullName(name);
+            setUserName(name);
         };
         fetchName();
     }, [user]);
@@ -68,7 +69,7 @@ const Navbar = ({user, onSignOut})=>{
                         <button className='text-zinc-100 hover:text-zinc-300' onClick={onOpen}>About</button>                        
                         {user ? (
                                 <div className='text-white flex items-center space-x-4'>
-                                <span>Welcome, {fullName}</span>
+                                <span>Welcome, {userName?.split(' ')[0] || ''}</span>
                                 <button onClick={signOutHandler} className='bg-emerald-500 p-2 text-sm rounded-md'>Sign Out</button>
                                 </div>
                             ) : (

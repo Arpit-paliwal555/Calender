@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { signUp, signIn } from '../auth.js';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../SupabaseClient.js';
+import { set } from 'date-fns';
+import { useUserContext } from '../contexts/UserContext.jsx';
 
 export default function AuthPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState('login'); // 'login' or 'signup'
   const [fullName, setFullName] = useState('');
-
+  const {setUser} = useUserContext();
   
   const navigate = useNavigate();
 
@@ -20,6 +22,7 @@ export default function AuthPage() {
       const { data, error } = await signIn(email, password);
       if (error) throw error;
       userData = data?.user;
+      setUser(userData);
         console.log('User signed in:', userData);
         console.log('user Id:', userData.id);
     } else {
