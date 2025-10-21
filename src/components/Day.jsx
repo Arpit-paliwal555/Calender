@@ -2,7 +2,7 @@ import {useState, useRef, useEffect} from "react";
 import EventForm from "./EventForm.jsx";
 import { useParams } from "react-router-dom";
 import { useEventsContext } from "../contexts/EventsContext.jsx";
-import { fi } from "date-fns/locale";
+import { supabase } from "../SupabaseClient.js";
 
 const Day = ()=>{
     const [showForm,setShowForm] = useState(false);
@@ -58,10 +58,23 @@ const Day = ()=>{
 
     const handleCloseForm = () => setShowForm(false);
 
-    const handleSaveEvent = (event) => {
+    const handleSaveEvent = async(event) => {
         console.log('Saved event:', event);
-        // TODO: persist event to state or backend
-        
+        // TODO: persist event to state or backend        
+        try {
+                const { data, error } = await supabase
+                    .from('events')
+                    .insert([event]);
+
+                if (error) {
+                    console.error('Error saving event:', error.message);
+                } else {
+                    console.log('Event saved successfully:', data);
+                }
+        } catch (err) {
+            console.error('Unexpected error:', err);
+        }
+
         addEvent(event);
         setShowForm(false);
     }

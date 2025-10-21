@@ -6,19 +6,19 @@ const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
     const [time, setTime] = useState('');
     const [description, setDescription] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const {userName} = useUserContext();
+    const {user, userName} = useUserContext();
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log("User Name in EventForm:", userName);
+        console.log("User ID in EventForm:", user.id);
         const event = {
-            id: Date.now(),
-            userId: user.id,
-            username: user.email,
+            //userId: user.id,
+            username: userName,
             title: title.trim(),
             time,
             description: description.trim(),
             category: selectedCategory,
-            createdAt: new Date().getHours() + ':' + new Date().getMinutes(),
             date: selectedDate,
         };
         if (onSave) onSave(event);
