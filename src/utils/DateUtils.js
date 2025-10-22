@@ -64,4 +64,34 @@ const fetchHolidays = async (year) => {
         }
 };
 
-export {currMonth, currYear, daysOfWeek, getDaysInMonth, getStartDay, generateDays, fetchHolidays};
+/**
+ * Generate recurring dates between startDate and endDate.
+ * startDate and endDate are strings in 'yyyy-MM-dd' or Date objects.
+ * frequency: 'daily' | 'weekly' | 'monthly'
+ * Returns array of date strings formatted as 'yyyy-MM-dd'.
+ */
+import { parseISO, addDays, addWeeks, addMonths, isAfter, format as formatDate, isValid } from 'date-fns';
+
+const generateRecurringDates = (startDate, endDate, frequency = 'daily', options = {}) => {
+    let current = typeof startDate === 'string' ? parseISO(startDate) : startDate;
+    const end = typeof endDate === 'string' ? parseISO(endDate) : endDate;
+    if(!isValid(current) || !isValid(end)) return [];
+
+    const dates = [];
+    while(!isAfter(current, end)){
+        dates.push(formatDate(current, 'yyyy-MM-dd'));
+        if(frequency === 'daily'){
+            current = addDays(current, 1);
+        }else if(frequency === 'weekly'){
+            current = addWeeks(current, 1);
+        }else if(frequency === 'monthly'){
+            current = addMonths(current, 1);
+        }else{
+            // default to daily if unknown frequency
+            current = addDays(current, 1);
+        }
+    }
+    return dates;
+}
+
+export {currMonth, currYear, daysOfWeek, getDaysInMonth, getStartDay, generateDays, fetchHolidays, generateRecurringDates};

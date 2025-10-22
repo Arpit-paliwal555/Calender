@@ -59,24 +59,42 @@ const Day = ()=>{
 
     const handleCloseForm = () => setShowForm(false);
 
-    const handleSaveEvent = async(event) => {
-        console.log('Saved event:', event);
-        // TODO: persist event to state or backend        
-        try {
-                const { data, error } = await supabase
-                    .from('events')
-                    .insert([event]);
+    const handleSaveEvent = async(payload) => {
+        // payload can be either {event, recurrence} (from EventForm) or a single event object for backwards compatibility
+        console.log('Saved event payload:', payload);
+        let eventsToSave = [];
+        if (payload && payload.event) {
+            const { event, recurrence } = payload;
+            if (recurrence) {
+                // generate dates between recurrence.startDate and recurrence.endDate based on frequency
+                const { generateRecurringDates } = await import('../utils/DateUtils.js');
+                const dates = generateRecurringDates(recurrence.startDate, recurrence.endDate, recurrence.frequency);
+                eventsToSave = dates.map(d => ({ ...event, date: d }));
+            } else {
+                eventsToSave = [payload.event];
+            }
+        } else if (payload) {
+            eventsToSave = [payload];
+        } else {
+            return;
+        }
 
-                if (error) {
-                    console.error('Error saving event:', error.message);
-                } else {
-                    console.log('Event saved successfully:', data);
-                }
+        try {
+            const { data, error } = await supabase
+                .from('events')
+                .insert(eventsToSave);
+
+            if (error) {
+                console.error('Error saving events:', error.message);
+            } else {
+                console.log('Events saved successfully:', data);
+            }
         } catch (err) {
             console.error('Unexpected error:', err);
         }
 
-        addEvent(event);
+        // update local context/state for each event saved
+        eventsToSave.forEach(ev => addEvent(ev));
         setShowForm(false);
     }
 

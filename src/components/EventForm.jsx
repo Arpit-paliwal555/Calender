@@ -7,6 +7,10 @@ const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
     const [description, setDescription] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
     const {user, userName} = useUserContext();
+    const [isRecurring, setIsRecurring] = useState(false);
+    const [frequency, setFrequency] = useState('daily');
+    const [rangeStart, setRangeStart] = useState('');
+    const [rangeEnd, setRangeEnd] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -63,12 +67,39 @@ const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
                         className="border p-2 rounded"
                         required
                     />
-                    <select onChange={(e) => setSelectedCategory(e.target.value)}>
+                    <select onChange={(e) => setSelectedCategory(e.target.value)} value={selectedCategory}>
                         <option value="All">All</option>
                         <option value="Work">Work</option>
                         <option value="Personal">Personal</option>
                         <option value="Festival">Festival</option>
                     </select>
+
+                    <label className="flex items-center gap-2 mt-2">
+                        <input type="checkbox" checked={isRecurring} onChange={(e)=>setIsRecurring(e.target.checked)} />
+                        <span className="text-sm">Recurring event</span>
+                    </label>
+
+                    {isRecurring && (
+                        <div className="flex flex-col gap-2">
+                            <div className="flex gap-2">
+                                <label className="text-sm">Frequency:</label>
+                                <select value={frequency} onChange={(e)=>setFrequency(e.target.value)}>
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="monthly">Monthly</option>
+                                </select>
+                            </div>
+                            <div className="flex gap-2">
+                                <label className="text-sm">Start:</label>
+                                <input type="date" value={rangeStart} onChange={(e)=>setRangeStart(e.target.value)} required className="border p-1 rounded" />
+                            </div>
+                            <div className="flex gap-2">
+                                <label className="text-sm">End:</label>
+                                <input type="date" value={rangeEnd} onChange={(e)=>setRangeEnd(e.target.value)} required className="border p-1 rounded" />
+                            </div>
+                        </div>
+                    )}
+
                     <div className="flex gap-2 justify-end">
                         <button type="button" onClick={() => onClose && onClose()} className="px-4 py-2 rounded border">
                             Cancel
