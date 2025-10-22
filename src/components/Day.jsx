@@ -3,6 +3,7 @@ import EventForm from "./EventForm.jsx";
 import { useParams } from "react-router-dom";
 import { useEventsContext } from "../contexts/EventsContext.jsx";
 import { supabase } from "../SupabaseClient.js";
+import { useUserContext } from "../contexts/UserContext.jsx";
 
 const Day = ()=>{
     const [showForm,setShowForm] = useState(false);
@@ -12,16 +13,16 @@ const Day = ()=>{
     const {events, addEvent} = useEventsContext();
     const [eventsByDay, setEventsByDay] = useState([]);
     const [eventsByHour, setEventsByHour] = useState({});
+    const {userName: currentUsername} = useUserContext();
     
     const hours = Array.from({length:24},(_,i)=>i+1); //24 hours
     const handleAddEventClick = ()=>{
         setShowForm(true);
     }
-
-    const handleDayClick = (dayId) => {
-        setSelectedDate(dayId);
-        setShowForm(true);
-    };
+    // const handleDayClick = (dayId) => {
+    //     setSelectedDate(dayId);
+    //     setShowForm(true);
+    // };
     useEffect(() => {
         const filteredEvents = events.filter(event => event.date === selectedDate);
         setEventsByDay(filteredEvents);
@@ -96,11 +97,18 @@ const Day = ()=>{
                             <div className="flex flex-col w-full">
                                 <div className="w-full h-16 cursor-pointer overflow-y-auto hover:bg-slate-100" onClick={handleAddEventClick}>                                                                        
                                     {eventsByHour[hour]?.length > 0 ? (
-                                                            eventsByHour[hour].map(event => (
-                                                                <div key={event.title} className="bg-emerald-300 p-2 text-xs rounded mb-1">
-                                                                    <b>{event.title}</b> at <b>{event.time}</b>
-                                                                </div>
-                                                            ))
+                                                            eventsByHour[hour].map(event => {
+                                                            const isCurrentUser = event.username === currentUsername; // Replace with actual current user's username
+                                                                const bgColor = isCurrentUser ? "bg-blue-300" : "bg-emerald-300";
+
+                                                                return (
+                                                                    <div key={event.title} className={`${bgColor} p-2 text-xs rounded mb-1 flex gap-3`}>
+                                                                        <b>{event.title}</b> at <b>{event.time}</b>
+                                                                        <span>Created by: <b>{event.username}</b></span>
+                                                                    </div>
+                                                                );
+
+                                                            })
                                                         ) : (
                                                             <div className="text-gray-400 text-sm">No event.</div>
                                                         )}

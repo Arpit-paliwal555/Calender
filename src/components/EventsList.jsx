@@ -60,6 +60,7 @@ const EventsList = () => {
                             <div className="text-gray-800">
                                 {event.title} at {event.time} on {event.date}
                             </div>
+                            {event.username?<div>Created by : {event.username}</div> : <div>No creator info</div>}
                             <button
                                 className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition-colors duration-200"
                                 onClick={() => removeEvent(`${event.title}-${event.date}`)}
@@ -82,6 +83,7 @@ const EventsList = () => {
                                 <div className="text-gray-800">
                                     {event.title} at {event.time} on {event.date}
                                 </div>
+                                {event.username?<div>Created by : {event.username}</div> : <div>No creator info</div>}
                                 <button
                                     className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition-colors duration-200"
                                     onClick={() => removeEvent(`${event.title}-${event.date}`)}
@@ -104,6 +106,7 @@ const EventsList = () => {
                                 <div className="text-gray-800">
                                     {event.title} at {event.time} on {event.date}
                                 </div>
+                                {event.username?<div>Created by : {event.username}</div> : <div>No creator info</div>}
                                 <button
                                     className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition-colors duration-200"
                                     onClick={() => removeEvent(`${event.title}-${event.date}`)}
@@ -126,6 +129,7 @@ const EventsList = () => {
                             <div className="text-gray-800">
                                 {event.title} at {event.time} on {event.date}
                             </div>
+                            {event.username?<div>Created by : {event.username}</div> : <div>No creator info</div>}
                             <button
                                 className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition-colors duration-200"
                                 onClick={() => removeEvent(`${event.title}-${event.date}`)}
