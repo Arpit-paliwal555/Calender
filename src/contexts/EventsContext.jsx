@@ -1,5 +1,7 @@
 import {createContext, useContext, useState} from "react";
 import {currMonth, currYear} from "../utils/DateUtils";
+import { useEffect } from "react";
+import { supabase } from "../SupabaseClient.js";
 
 const EventsContext = createContext();
 
@@ -22,6 +24,21 @@ export const EventsProvider = ({children})=>{
     const removeEvent = (eventId) => {
             setEvents(events.filter(event => `${event.title}-${event.date}` !== eventId));
     }
+    useEffect(() => {
+    const fetchEvents = async () => {
+        const { data, error } = await supabase
+                .from('events')
+                .select('*');
+
+            if (error) {
+                console.error('Error fetching events:', error);
+            } else {
+                setEvents(data);
+            }
+        };
+
+        fetchEvents();
+    }, [month, year]);
     return (
         <EventsContext.Provider value={{events, addEvent, removeEvent, month, year, changeMonth, changeYear}}>
             {children}
