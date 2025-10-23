@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUserContext } from '../contexts/UserContext.jsx';
 
 const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
@@ -30,6 +30,27 @@ const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
         setTitle('');
         setTime('');
     };
+
+    useEffect(() => {
+        if (!isRecurring) {
+            setFrequency('daily');
+            setRangeStart('');
+            setRangeEnd('');
+        }else{
+            for(const dateField of [rangeStart, rangeEnd]) {
+                const event = {
+                //userId: user.id,
+                username: userName,
+                title: title.trim(),
+                time,
+                description: description.trim(),
+                category: selectedCategory,
+                date: dateField,
+                };
+                onSave(event);
+            }
+        }
+    }, [isRecurring]);
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

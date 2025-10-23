@@ -1,5 +1,6 @@
 import {useState, useRef, useEffect} from "react";
 import EventForm from "./EventForm.jsx";
+import {ViewEvent} from "./ViewEvent.jsx";
 import { useParams } from "react-router-dom";
 import { useEventsContext } from "../contexts/EventsContext.jsx";
 import { supabase } from "../SupabaseClient.js";
@@ -7,6 +8,7 @@ import { useUserContext } from "../contexts/UserContext.jsx";
 
 const Day = ()=>{
     const [showForm,setShowForm] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
     const date = useParams().dayId;
     const [selectedDate, setSelectedDate] = useState(date);
     const modalRef = useRef(null);
@@ -15,10 +17,16 @@ const Day = ()=>{
     const [eventsByHour, setEventsByHour] = useState({});
     const {userName: currentUsername} = useUserContext();
     
-    const hours = Array.from({length:24},(_,i)=>i+1); //24 hours
+    const hours = Array.from({length:24},(_,i)=>i); // 0-23 to match getHours()
     const handleAddEventClick = ()=>{
         setShowForm(true);
     }
+
+    const viewEventDetails = (event)=>{
+        setShowForm(false);
+      setSelectedEvent(event);
+    };
+
     // const handleDayClick = (dayId) => {
     //     setSelectedDate(dayId);
     //     setShowForm(true);
@@ -108,21 +116,29 @@ const Day = ()=>{
                 onClose={handleCloseForm}
                 onSave={handleSaveEvent}
             />
-        )}            
+        )}        
+        {selectedEvent && (
+            <ViewEvent
+            event={selectedEvent}
+            onClose={() => setSelectedEvent(null)}
+            />
+        )}
+            
         {hours.map((hour) => (
-                        <div key={hour} className="border border-grey-300 flex flex-row">
+                        <div key={hour} className="border border-gray-300 flex flex-row">
                             <div className="font-thin text-sm w-12 text-center">{hour}</div>
                             <div className="flex flex-col w-full">
                                 <div className="w-full h-16 cursor-pointer overflow-y-auto hover:bg-slate-100" onClick={handleAddEventClick}>                                                                        
                                     {eventsByHour[hour]?.length > 0 ? (
                                                             eventsByHour[hour].map(event => {
-                                                            const isCurrentUser = event.username === currentUsername; // Replace with actual current user's username
+                                                            const isCurrentUser = event.username === currentUsername;
                                                                 const bgColor = isCurrentUser ? "bg-blue-300" : "bg-emerald-300";
 
                                                                 return (
-                                                                    <div key={event.title} className={`${bgColor} p-2 text-xs rounded mb-1 flex gap-3`}>
-                                                                        <b>{event.title}</b> at <b>{event.time}</b>
-                                                                        <span>Created by: <b>{event.username}</b></span>
+                                                                    <div key={event.title} className={`${bgColor} p-2 text-xs rounded mb-1 flex flex-row justify-between items-center`}>
+                                                                        <div><b>{event.title}</b> at <b>{event.time}</b></div>
+                                                                        <div>Created by: <b>{event.username}</b></div>
+                                                                        <button className="bg-green-500 p-1 rounded-md text-xs self-start" onClick={() => viewEventDetails(event)}>View</button>
                                                                     </div>
                                                                 );
 
