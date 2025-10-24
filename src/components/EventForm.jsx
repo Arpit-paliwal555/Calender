@@ -15,9 +15,10 @@ const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("User Name in EventForm:", userName);
-        console.log("User ID in EventForm:", user.id);
+        console.log("User ID in EventForm:", user?.id);
+
         const event = {
-            //userId: user.id,
+            //userId: user?.id,
             username: userName,
             title: title.trim(),
             time,
@@ -25,32 +26,32 @@ const EventForm = ({ modalRef, selectedDate, onClose, onSave }) => {
             category: selectedCategory,
             date: selectedDate,
         };
-        if (onSave) onSave(event);
+
+        // If recurring, send recurrence metadata to the parent so it can create multiple rows
+        const recurrence = isRecurring ? { startDate: rangeStart || selectedDate, endDate: rangeEnd || selectedDate, frequency } : null;
+
+        if (onSave) {
+            if (recurrence) onSave({ event, recurrence });
+            else onSave(event);
+        }
+
         // reset local state
         setTitle('');
         setTime('');
+        setDescription('');
+        setIsRecurring(false);
     };
 
     useEffect(() => {
+        // keep sensible defaults when toggling recurring on/off
         if (!isRecurring) {
             setFrequency('daily');
-            setRangeStart('');
-            setRangeEnd('');
-        }else{
-            for(const dateField of [rangeStart, rangeEnd]) {
-                const event = {
-                //userId: user.id,
-                username: userName,
-                title: title.trim(),
-                time,
-                description: description.trim(),
-                category: selectedCategory,
-                date: dateField,
-                };
-                onSave(event);
-            }
+        } else {
+            // prefill start/end with selectedDate when user opens recurring options
+            if (!rangeStart) setRangeStart(selectedDate || '');
+            if (!rangeEnd) setRangeEnd(selectedDate || '');
         }
-    }, [isRecurring]);
+    }, [isRecurring, selectedDate]);
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
