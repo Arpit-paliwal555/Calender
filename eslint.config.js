@@ -9,6 +9,8 @@ export default defineConfig([
   {
     files: ['**/*.{js,jsx}'],
     extends: [
+      "react-app",
+      "plugin:prettier/recommended",
       js.configs.recommended,
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
@@ -23,6 +25,12 @@ export default defineConfig([
       },
     },
     rules: {
+      "prettier/prettier": [
+      "error",
+        {
+          "endOfLine": "auto"
+        }
+      ],
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
